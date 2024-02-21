@@ -1,21 +1,10 @@
-import HillaView from "Frontend/views/hilla/HillaView.js";
+import { toReactRouter } from '@vaadin/hilla-file-router/runtime.js';
+import views from 'Frontend/generated/views.js';
 import { serverSideRoutes } from "Frontend/generated/flow/Flow";
-import {createBrowserRouter,RouteObject} from "react-router-dom";
-import MainLayout from "Frontend/views/MainLayout.js";
-import AboutView from "Frontend/views/about/AboutView.js";
+import {createBrowserRouter} from "react-router-dom";
 
-export const routes = [
-    {
-        element: <MainLayout />,
-        handle: { title: 'Main' },
-        children: [
-            { path: '/', element: <AboutView />, handle: { title: 'Welcome' } },
-            { path: '/hilla', element: <HillaView />, handle: { title: 'Hilla' } },
-            ...serverSideRoutes
-        ],
-    },
-] as RouteObject[];
+const route = toReactRouter(views);
+route.children?.push(...serverSideRoutes);
 
-
-export const router = createBrowserRouter([...routes], {basename: new URL(document.baseURI).pathname });
-
+export const routes = [route]
+export const router = createBrowserRouter(routes, {basename: new URL(document.baseURI).pathname });

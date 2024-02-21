@@ -1,6 +1,7 @@
 import { AppLayout } from '@vaadin/react-components/AppLayout.js';
 import { DrawerToggle } from '@vaadin/react-components/DrawerToggle.js';
 import Placeholder from 'Frontend/components/placeholder/Placeholder.js';
+import {createMenuItems} from '@vaadin/hilla-file-router/runtime.js';
 import { useRouteMetadata } from 'Frontend/util/routing.js';
 import { Suspense, useEffect } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
@@ -20,15 +21,11 @@ export default function MainLayout() {
                 <header className="flex flex-col gap-m">
                     <h1 className="text-l m-0">Hybrid example</h1>
                     <nav>
-                        <NavLink className={navLinkClasses} to="/">
-                            About
+                      {createMenuItems().map(({ to, icon, title }) => (
+                        <NavLink className={navLinkClasses} to={to}>
+                          {title}
                         </NavLink>
-                        <NavLink className={navLinkClasses} to="/hilla">
-                            Hilla
-                        </NavLink>
-                        <NavLink to={'/flow'} className={navLinkClasses}>
-                            Flow
-                        </NavLink>
+                      ))}
                     </nav>
                 </header>
             </div>
