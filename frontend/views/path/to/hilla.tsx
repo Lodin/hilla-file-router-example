@@ -5,10 +5,6 @@ import { HelloEndpoint } from "Frontend/generated/endpoints.js";
 import { useState } from "react";
 import {VerticalLayout} from "@vaadin/react-components/VerticalLayout.js";
 
-export const config: ViewConfig = {
-  title: 'Fancy Hilla View Title'
-};
-
 export default function HillaView() {
   const [name, setName] = useState("");
   const [notifications, setNotifications] = useState([] as string[]);
