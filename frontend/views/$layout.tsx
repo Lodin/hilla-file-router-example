@@ -22,7 +22,7 @@ export default function MainLayout() {
                     <h1 className="text-l m-0">Hybrid example</h1>
                     <nav>
                       {createMenuItems().map(({ to, icon, title }) => (
-                        <NavLink className={navLinkClasses} to={to}>
+                        <NavLink className={navLinkClasses} to={to} key={to}>
                           {title}
                         </NavLink>
                       ))}
