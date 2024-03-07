@@ -1,16 +1,10 @@
 package org.vaadin.example.security;
 
-import java.util.Arrays;
-
-import com.vaadin.flow.spring.security.VaadinWebSecurity;
-
 import java.util.Base64;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.crypto.spec.SecretKeySpec;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +18,7 @@ import org.springframework.security.oauth2.jose.jws.JwsAlgorithms;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.AntPathMatcher;
 
+import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import com.vaadin.hilla.route.ClientRouteRegistry;
 import com.vaadin.hilla.route.records.ClientViewConfig;
 
@@ -33,7 +28,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Configuration
 public class SecurityConfiguration extends VaadinWebSecurity {
 
-    private ClientRouteRegistry clientRouteRegistry;
+    private final ClientRouteRegistry clientRouteRegistry;
 
     public SecurityConfiguration(ClientRouteRegistry clientRouteRegistry) {
         this.clientRouteRegistry = clientRouteRegistry;
@@ -86,23 +81,17 @@ public class SecurityConfiguration extends VaadinWebSecurity {
         if (viewConfig.isEmpty()) {
             return false;
         }
-        final String[] rolesAllowed = viewConfig.get().rolesAllowed();
-        if (isAnonymousAllowed(rolesAllowed)) {
-            return true;
-        } else {
-            for (String role : rolesAllowed) {
+        // current roles logic means that an empty array denies access to all
+        var rolesAllowed = viewConfig.get().rolesAllowed();
+        if (rolesAllowed != null) {
+            for (var role : rolesAllowed) {
                 if (request.isUserInRole(role)) {
                     return true;
                 }
             }
+            return false;
         }
-        return false;
-    }
-
-    private static boolean isAnonymousAllowed(final String[] rolesAllowed) {
-        return rolesAllowed == null || rolesAllowed.length == 0
-                || Arrays.stream(rolesAllowed)
-                        .anyMatch(role -> role.equalsIgnoreCase("anonymous"));
+        return true;
     }
 
     private Optional<ClientViewConfig> getRouteData(
