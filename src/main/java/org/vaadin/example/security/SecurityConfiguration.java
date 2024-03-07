@@ -55,6 +55,7 @@ public class SecurityConfiguration extends VaadinWebSecurity {
                 .requestMatchers(new AntPathRequestMatcher("/line-awesome/**/*.svg")).permitAll());
 
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(this::isRouteAllowed).permitAll());
+        // http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/").permitAll());
 
         super.configure(http);
 
